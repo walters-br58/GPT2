@@ -15,8 +15,8 @@ import torch
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 
-from model   import GPT2Like, GPTConfig
 from dataset import build_dataloaders
+from model_factory import ModelFactory
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -139,15 +139,9 @@ def train():
     )
 
     # ── Model ────────────────────────────────────────────────────────────────
-    cfg   = GPTConfig(
-        vocab_size = CONFIG["vocab_size"],
-        block_size = CONFIG["block_size"],
-        d_model    = CONFIG["d_model"],
-        n_layers   = CONFIG["n_layers"],
-        n_heads    = CONFIG["n_heads"],
-        dropout    = CONFIG["dropout"],
-    )
-    model = GPT2Like(cfg).to(device)
+    factory = ModelFactory()
+    model   = factory.create_model('standard').to(device)
+    cfg     = model.cfg
 
     # ── Optimizer ────────────────────────────────────────────────────────────
     # Separate weight-decayed params (weights) from non-decayed (biases, LN)

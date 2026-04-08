@@ -12,8 +12,9 @@ import torch
 from tokenizers import Tokenizer
 from torch.utils.data import DataLoader
 
-from model   import GPT2Like, GPTConfig
-from dataset import build_dataloaders
+from model         import GPT2Like, GPTConfig
+from dataset       import build_dataloaders
+from model_factory import ModelFactory
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -110,8 +111,9 @@ def main():
     # Load saved model
     print("\nLoading trained model from 'gpt2_final.pt'...")
     checkpoint = torch.load("gpt2_final.pt", map_location=device)
-    cfg   = checkpoint["config"]
-    model = GPT2Like(cfg).to(device)
+    cfg        = checkpoint["config"]
+    factory    = ModelFactory()
+    model      = factory.create_model('standard').to(device)
     model.load_state_dict(checkpoint["model_state"])
 
     # Build test DataLoader

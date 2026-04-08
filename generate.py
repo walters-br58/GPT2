@@ -13,8 +13,8 @@ import torch
 import torch.nn.functional as F
 from tokenizers import Tokenizer
 
-from model import GPT2Like, GPTConfig
-
+from model         import GPT2Like, GPTConfig
+from model_factory import ModelFactory
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Core generation function
@@ -133,8 +133,8 @@ def main():
     # Load model
     print("Loading trained model from 'gpt2_final.pt'...")
     checkpoint = torch.load("gpt2_final.pt", map_location=device)
-    cfg   = checkpoint["config"]
-    model = GPT2Like(cfg).to(device)
+    factory    = ModelFactory()
+    model      = factory.create_model('standard').to(device)
     model.load_state_dict(checkpoint["model_state"])
 
     # Load tokenizer
